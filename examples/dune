@@ -1,0 +1,4 @@
+(executable
+ (public_name ocaml-mpst-light.example)
+ (name example)
+ (libraries mpst_light))
