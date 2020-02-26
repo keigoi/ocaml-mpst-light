@@ -470,6 +470,8 @@ let run _ =
         exc
 
 let _ =
+  Clflags.real_paths := false;
+  Clflags.open_modules := !Clflags.open_modules @ ["Js_of_ocaml_lwt"; "Mpst_light"];
   Dom_html.window##.onload :=
     Dom_html.handler (fun _ ->
         run ();

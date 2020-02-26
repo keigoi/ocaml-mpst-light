@@ -1,13 +1,14 @@
 (executables
   (names toplevel)
   (libraries
+    mpst_light
     js_of_ocaml-compiler
     js_of_ocaml-tyxml
     js_of_ocaml-toplevel
     lwt
     js_of_ocaml-lwt
     ;; not used directly
-    graphics
+    ; graphics
     js_of_ocaml.deriving
     bigarray
     react reactiveData
@@ -25,36 +26,17 @@
     (                -> ppx_disabled.ml.in))
     )
   (flags (:standard -rectypes -linkall))
-  (modules (:standard \ test_dynlink))
+  (modules (:standard))
   (preprocess (pps js_of_ocaml-ppx)))
 
 (rule
- (targets test_dynlink.cmo test_dynlink.cmi)
- (action (run ocamlc -c %{dep:test_dynlink.ml})))
-
-(rule
- (targets test_dynlink.js)
- (action (run %{bin:js_of_ocaml}
-          -I ./
-          --pretty
-          --toplevel
-          --noruntime %{lib:js_of_ocaml-compiler:runtime.js}
-          %{dep:test_dynlink.cmo})))
-
-(rule
  (targets export.txt)
- (deps
-   (package js_of_ocaml-ppx)
-   (package js_of_ocaml)
-   (package js_of_ocaml-lwt)
-   (package js_of_ocaml-tyxml)
-   (package js_of_ocaml-toplevel)
- )
  (action (run
     jsoo_listunits -o %{targets}
+	  ocaml-mpst-light
       stdlib
-      graphics
-      js_of_ocaml-lwt.graphics
+      ; graphics
+      ; js_of_ocaml-lwt.graphics
       js_of_ocaml-ppx.as-lib
       js_of_ocaml.deriving
       lwt bigarray
@@ -64,7 +46,7 @@
       js_of_ocaml js_of_ocaml-lwt
       js_of_ocaml-tyxml
       js_of_ocaml-toplevel
-      dynlink
+      ; dynlink
       )))
 
 (rule
@@ -74,8 +56,6 @@
           -I %{lib:reactiveData:.}
           -I .
           --file %{dep:examples.ml}
-          --file %{dep:test_dynlink.cmo}
-          --file %{dep:test_dynlink.js}
 	  --export %{dep:export.txt}
           --toplevel
 	  --disable shortvar
