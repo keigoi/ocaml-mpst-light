@@ -1,14 +1,17 @@
 # OCaml-MPST-Light
 
-An even-more lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mpst)
+An even-more lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mpst).
 
-* [Mpst_light](mpst_light.ml) The body of implementation
+* For better understanding of implementation, we prepared [Mpst_no_lin_check](mpst_no_lin_check.ml).
+* Examples are in [examples/](examples/).
+
+* [Mpst_light](mpst_light.ml) The body of implementation (dynamic linearity checking)
+* [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
+
+* Modules and sub-packages
   * [Base](base.ml): Utility types and modules
   * [concur-shims](packages/concur-shims): Rough adjustment of Lwt to OCaml's threads package
-* [Mpst_no_lin_check](mpst_no_lin_check.ml): Yet another implementation without linearity, for better understanding of implementation
-* [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
   * [linocaml-light](packages/linocaml-light): 
-* [examples/](examples/): Examples
 
 ## Try
 
