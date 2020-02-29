@@ -4,9 +4,11 @@ An even-more lightweight implementation of [ocaml-mpst](https://github.com/keigo
 
 * [Mpst_light](mpst_light.ml) The body of implementation
   * [Base](base.ml): Utility types and modules
-  * [concurrency_ocaml.ml.in](concurrency_ocaml.ml.in), [concurrency_lwt.ml.in](concurrency_lwt.ml.in): Rough adjustment of Lwt to OCaml's threads package
+  * [concur-shims](packages/concur-shims): Rough adjustment of Lwt to OCaml's threads package
 * [Mpst_no_lin_check](mpst_no_lin_check.ml): Yet another implementation without linearity, for better understanding of implementation
-* [examples/example.ml](examples/example.ml) Examples
+* [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
+  * [linocaml-light](packages/linocaml-light): 
+* [examples/](examples/): Examples
 
 ## Try
 
