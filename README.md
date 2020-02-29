@@ -1,20 +1,30 @@
 # OCaml-MPST-Light
 
-An even-more lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mpst).
+A lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mpst).
 
-* For better understanding of implementation, we prepared [Mpst_no_lin_check](mpst_no_lin_check.ml).
-* Examples are in [examples/](examples/).
 
-* [Mpst_light](mpst_light.ml) The body of implementation (dynamic linearity checking)
-* [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
+## Try OCaml-MPST Online!
+
+* An interactive programming interface is available at: https://keigoi.github.io/ocaml-mpst-light/index.html
+
+
+## Source Code
+
+* For better understanding of implementation code, we prepared [Mpst_no_lin_check](mpst_no_lin_check.ml) (no linearity checks) with comments.
+
+* Linearity checking:
+  * [Mpst_light](mpst_light.ml) The body of implementation (dynamic linearity checking)
+  * [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
 
 * Other modules and sub-packages:
   * [Base](base.ml): Utility types and modules
   * [concur-shims](packages/concur-shims): Rough adjustment of Lwt to OCaml's threads package
   * [linocaml-light](packages/linocaml-light): 
 
+* Examples: See [examples/](examples/).
 
-## Try
+
+## Try Offline
 
 ```sh
 $ ./compile_without_dune.sh
@@ -50,8 +60,6 @@ Then you can play ocaml-mpst-light within OCaml toplevel:
 
 # 
 ```
-
-Note that if you have installed `lwt` via opam, `dune` automatically selects `lwt`-enabled version of ocaml-mpst-light.
 
 
 ## Install (Experimental)
