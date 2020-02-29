@@ -8,10 +8,11 @@ An even-more lightweight implementation of [ocaml-mpst](https://github.com/keigo
 * [Mpst_light](mpst_light.ml) The body of implementation (dynamic linearity checking)
 * [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
 
-* Modules and sub-packages
+* Other modules and sub-packages:
   * [Base](base.ml): Utility types and modules
   * [concur-shims](packages/concur-shims): Rough adjustment of Lwt to OCaml's threads package
   * [linocaml-light](packages/linocaml-light): 
+
 
 ## Try
 
@@ -51,3 +52,13 @@ Then you can play ocaml-mpst-light within OCaml toplevel:
 ```
 
 Note that if you have installed `lwt` via opam, `dune` automatically selects `lwt`-enabled version of ocaml-mpst-light.
+
+
+## Install (Experimental)
+
+```sh
+$ git clone https://github.com/keigoi/ocaml-mpst-light.git
+$ cd ocaml-mpst-light
+$ opam install ocaml-mpst-light
+$ opam install ocaml-mpst-light.static
+```
