@@ -162,11 +162,11 @@ let setup_examples ~container ~textbox =
      assert false
    with _ -> ());
   let example_container = by_id "toplevel-examples" in
-  let _ =
+  let _, elms =
     List.fold_left
-      (fun acc tok ->
+      (fun (acc,elms) tok ->
         match tok with
-        | `Content line -> line ^ "\n" ^ acc
+        | `Content line -> (line ^ "\n" ^ acc, elms)
         | `Title name ->
             let a =
               Tyxml_js.Html.(
@@ -184,11 +184,12 @@ let setup_examples ~container ~textbox =
                     ]
                   [ txt name ])
             in
-            Dom.appendChild example_container (Tyxml_js.To_dom.of_a a);
-            "")
-      ""
+            ("", a::elms))
+      ("", [])
       !all
   in
+  List.iter (fun a ->
+      Dom.appendChild example_container (Tyxml_js.To_dom.of_a a)) elms;
   ()
 
 (* we need to compute the hash form href to avoid different encoding behavior
@@ -436,7 +437,7 @@ let run _ =
       >>= fun () ->
       textbox##focus;
       Lwt.return_unit);
-  Graphics_support.init (by_id_coerce "test-canvas" Dom_html.CoerceTo.canvas);
+  (* Graphics_support.init (by_id_coerce "test-canvas" Dom_html.CoerceTo.canvas); *)
   Sys_js.set_channel_flusher caml_chan (append Colorize.ocaml output "caml");
   Sys_js.set_channel_flusher sharp_chan (append Colorize.ocaml output "sharp");
   Sys_js.set_channel_flusher stdout (append Colorize.text output "stdout");
@@ -452,7 +453,7 @@ let run _ =
   setup_examples ~container ~textbox;
   setup_pseudo_fs ();
   setup_toplevel ();
-  setup_js_preview ();
+  (* setup_js_preview (); *)
   setup_printers ();
   History.setup ();
   textbox##.value := Js.string "";

@@ -12,7 +12,14 @@ type (_,_,_,_) lens =
       ('xs -> 'x) * ('xs -> 'y -> 'ys)
       -> ('x,'y,'xs,'ys) lens
 
+type ('pre, 'post, 'a) monad = {__m:('pre -> ('post * 'a) Concur_shims.IO.io)}
+
+type all_empty = [`cons of unit * 'xs] as 'xs
+
+type 'f bind
+
 val lens_get : ('x,'y,'xs,'ys) lens -> 'xs -> 'x
+
 val lens_put : ('x,'y,'xs,'ys) lens -> 'xs -> 'y -> 'ys
 
 val _0 : ('a, 'b, [`cons of 'a * 'xs], [`cons of 'b * 'xs]) lens
@@ -20,10 +27,6 @@ val _0 : ('a, 'b, [`cons of 'a * 'xs], [`cons of 'b * 'xs]) lens
 val _1 : ('a, 'b, [`cons of 'x1 * [`cons of 'a * 'xs]], [`cons of 'x1 * [`cons of 'b * 'xs]]) lens
 
 val _2 : ('a, 'b, [`cons of 'x1 * [`cons of 'x2 * [`cons of 'a * 'xs]]], [`cons of 'x1 * [`cons of 'x2 * [`cons of 'b * 'xs]]]) lens
-
-type ('pre, 'post, 'a) monad = {__m:('pre -> ('post * 'a) Concur_shims.IO.io)}
-
-type all_empty = [`cons of unit * 'xs] as 'xs
 
 val return : 'a -> ('pre, 'pre, 'a data) monad
 
@@ -34,8 +37,6 @@ val bind : ('pre, 'mid, 'a data) monad
 val bind_ : ('pre, 'mid, 'a data) monad
            -> ('mid, 'post, 'b) monad
            -> ('pre, 'post, 'b) monad
-
-type 'f bind
 
 val bind_lin : ('pre, 'mid, 'a lin) monad
             -> ('a lin -> ('mid, 'post, 'b) monad) bind
@@ -58,6 +59,7 @@ val put_lin : (unit,'a lin,'mid,'post) lens -> ('pre,'mid,'a lin) monad -> ('pre
 val put_linval : (unit,'a lin,'pre,'post) lens -> 'a -> ('pre,'post,unit data) monad
 
 val run : ('a -> (all_empty, all_empty, 'b data) monad) -> 'a -> 'b Concur_shims.IO.io
+
 val run_ : (unit -> (all_empty, all_empty, 'b data) monad) -> 'b Concur_shims.IO.io
 
 module Syntax : sig
