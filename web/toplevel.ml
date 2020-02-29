@@ -472,6 +472,7 @@ let run _ =
 let _ =
   Clflags.real_paths := false;
   Clflags.open_modules := !Clflags.open_modules @ ["Js_of_ocaml_lwt"; "Mpst_light"];
+  Ppx_linocaml_enable.init ();
   Dom_html.window##.onload :=
     Dom_html.handler (fun _ ->
         run ();

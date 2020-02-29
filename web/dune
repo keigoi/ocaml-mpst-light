@@ -1,7 +1,12 @@
 (executables
-  (names toplevel)
+  (names toplevel ppx_linocaml_enable)
   (libraries
-    mpst_light
+    ocaml-mpst-light
+    ocaml-mpst-light.static
+    linocaml-light
+    linocaml-light.ppx
+	concur-shims
+	concur-shims-lwt
     js_of_ocaml-compiler
     js_of_ocaml-tyxml
     js_of_ocaml-toplevel
@@ -34,6 +39,11 @@
  (action (run
     jsoo_listunits -o %{targets}
 	  ocaml-mpst-light
+	  ocaml-mpst-light.static
+	  linocaml-light
+	  linocaml-light.ppx-as-lib
+	  concur-shims
+	  concur-shims-lwt
       stdlib
       ; graphics
       ; js_of_ocaml-lwt.graphics

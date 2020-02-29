@@ -352,7 +352,7 @@ let expression_mapper id mapper exp attrs =
 let has_runner attrs =
   List.exists (fun ({txt = name; _},_) -> name = "runner")  attrs
 
-let mapper_fun _ _ =
+let mapper =
   let open Ast_mapper in
   let expr mapper outer =
   match outer with
@@ -372,4 +372,4 @@ let () =
   Driver.register
     ~name:"ppx_linocaml"
     Versions.ocaml_408
-    mapper_fun
+    (fun _config _cookies -> mapper)
