@@ -1,0 +1,5 @@
+(library
+  (public_name ocaml-mpst-light.static)
+  (name mpst_static)
+  (preprocess (pps linocaml-light.ppx))
+  (libraries mpst_light linocaml-light))

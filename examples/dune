@@ -1,4 +1,5 @@
 (executable
  (public_name ocaml-mpst-light.example)
  (name example)
- (libraries mpst_light))
+ (preprocess (pps linocaml-light.ppx))
+ (libraries ocaml-mpst-light ocaml-mpst-light.static))
