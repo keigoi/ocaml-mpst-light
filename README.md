@@ -3,9 +3,14 @@
 A lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mpst).
 
 
-## Try OCaml-MPST Online!
+## Try OCaml-MPST [Online](https://keigoi.github.io/ocaml-mpst-light/index.html)!
 
-* An interactive programming interface is available at: https://keigoi.github.io/ocaml-mpst-light/index.html
+* An interactive programming interface is available at:
+  * https://keigoi.github.io/ocaml-mpst-light/index.html
+
+![Try OCaml-MPST Screenshot](https://keigoi.github.io/ocaml-mpst-light/screenshot.png)
+
+[Try OCaml-MPST Online](https://keigoi.github.io/ocaml-mpst-light/index.html)
 
 
 ## Source Code
