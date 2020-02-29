@@ -18,15 +18,27 @@ A lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mps
 * For better understanding of implementation code, we prepared [Mpst_no_lin_check](mpst_no_lin_check.ml) (no linearity checks) with comments.
 
 * Linearity checking:
-  * [Mpst_light](mpst_light.ml) The body of implementation (dynamic linearity checking)
+  * [Mpst_light](mpst_light.ml): Dynamic linearity checking
   * [Mpst_static](static/mpst_no_lin_check.ml): Static linearity checking
 
 * Other modules and sub-packages:
-  * [Base](base.ml): Utility types and modules
+  * [Base](base.ml): Utility types and modules (`Mergeable`, `Name` and `Lin`)
   * [concur-shims](packages/concur-shims): Rough adjustment of Lwt to OCaml's threads package
   * [linocaml-light](packages/linocaml-light): 
 
 * Examples: See [examples/](examples/).
+
+
+## Restrictions
+
+For simplicity, this lightweight implementation omits several features. Namely,
+
+* The number of roles are fixed to three.
+* No asynchronous communication channels.
+* No scatter/gather (multicast).
+* No TCP nor HTTP binding.
+
+For these features, see full [ocaml-mpst](https://github.com/keigoi/ocaml-mpst).
 
 
 ## Try Offline
