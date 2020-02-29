@@ -15,7 +15,8 @@ A lightweight implementation of [ocaml-mpst](https://github.com/keigoi/ocaml-mps
 
 ## Source Code
 
-* For better understanding of implementation code, we prepared [Mpst_no_lin_check](mpst_no_lin_check.ml) (no linearity checks) with comments.
+* For better understanding of implementation code:
+  * [Mpst_no_lin_check](mpst_no_lin_check.ml): A `simpler' implementation without linearity checking, with comments.
 
 * Linearity checking:
   * [Mpst_light](mpst_light.ml): Dynamic linearity checking
