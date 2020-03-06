@@ -224,6 +224,70 @@
 
         </tbody>
       </table>
+<h2 id="what-is-ocaml-mpst-">What is <code>ocaml-mpst</code>?</h2>
+<p><code>ocaml-mpst</code> is  a communication library powered by  <strong>Multiparty Session Types</strong> (abbreviated as MPST) in OCaml. Thus it ensures: </p>
+<ul>
+<li><strong>Dadlock-freedom</strong>, </li>
+<li><strong>Protocol fidelity</strong> (communication will take place according to a prescribed protocol) and </li>
+<li><strong>Communication safety</strong> (you do not get any type-mismatch errors)</li>
+</ul>
+<p>--- under the assumption that all communication channels are used <em>linearly</em>. Linearity is checked either <em>dynamically</em> (default) or <em>statically</em>, via another library <code>linocaml</code>.</p>
+<h2 id="ocaml-mpst-in-5-minutes">ocaml-mpst in 5 minutes</h2>
+<ol>
+<li>Write down a <strong>protocol</strong> using  <strong>Global Combinators</strong>. </li>
+</ol>
+<pre><code class="lang-ocaml"><span class="hljs-function"><span class="hljs-title">let</span> ring = (a --&gt;</span> <span class="hljs-function"><span class="hljs-title">b</span>) msg @@ (b --&gt;</span> <span class="hljs-function"><span class="hljs-title">c</span>) msg @@ (c --&gt;</span> a) finish
+</code></pre>
+<p>  --- This is a simple three-party ring-based protocol with <em>participants</em> <code>A</code>, <code>B</code> and <code>C</code>, circulating messages with <em>label</em> <code>msg</code> in this order. </p>
+<ul>
+<li>Protocol  <code>(a --&gt; b) msg</code> specifies a message with label <code>msg</code> is sent from <code>a</code> to <code>b</code>. Protocols are composed by applying combinator <code>--&gt;</code> to existing protocols (possibly via OCaml&#39;s function application operator <code>@@</code>, as above).</li>
+<li>Combinator <code>finish</code> denotes termination of a protocol.</li>
+</ul>
+<p>(More combinators will be explained later.)</p>
+<ol>
+<li>Extract channels for each participants (here <code>sa</code> for <code>A</code>, <code>sb</code> for <code>B</code>, and <code>sc</code> for <code>C</code>) from the protocol:</li>
+</ol>
+<pre><code class="lang-ocaml"><span class="hljs-keyword">let</span> sa = get_ch a <span class="hljs-built_in">ring</span>
+<span class="hljs-keyword">let</span> sb = get_ch b <span class="hljs-built_in">ring</span>
+<span class="hljs-keyword">let</span> sc = get_ch c <span class="hljs-built_in">ring</span>
+</code></pre>
+<ol>
+<li>Run threads in parallel, one for each participant!</li>
+</ol>
+<pre><code class="lang-ocaml">(* Participant A *)
+Thread.create <span class="hljs-function"><span class="hljs-params">(fun () -&gt; 
+  <span class="hljs-keyword">let</span> sa = send sa#role_B#msg <span class="hljs-string">"Hello, "</span> <span class="hljs-keyword">in</span>
+  <span class="hljs-keyword">let</span> `msg(str, sa) = receive sa#role_C <span class="hljs-keyword">in</span>
+  print_endline str;
+  close sa
+)</span> <span class="hljs-params">()</span>;;
+
+<span class="hljs-params">(* Participant B *)</span>
+<span class="hljs-title">Thread</span>.<span class="hljs-title">create</span> <span class="hljs-params">(fun () -&gt;
+  <span class="hljs-keyword">let</span> `msg(str,sb) = receive sb#role_A <span class="hljs-keyword">in</span>
+  <span class="hljs-keyword">let</span> sb = send sb#role_C#msg (str ^ <span class="hljs-string">"MPST"</span>) <span class="hljs-keyword">in</span>
+  close sb
+)</span> <span class="hljs-params">()</span>;;
+
+<span class="hljs-params">(* Participant C *)</span>
+<span class="hljs-title">let</span> `<span class="hljs-title">msg</span><span class="hljs-params">(str, sc)</span> = <span class="hljs-title">receive</span> <span class="hljs-title">sc</span>#<span class="hljs-title">role_C</span> <span class="hljs-title">in</span>
+<span class="hljs-title">let</span> <span class="hljs-title">sc</span> = <span class="hljs-title">send</span> <span class="hljs-title">sc</span>#<span class="hljs-title">role_A</span>#<span class="hljs-title">msg</span> <span class="hljs-params">(str ^ <span class="hljs-string">" World!"</span>)</span> <span class="hljs-title">in</span>
+<span class="hljs-title">close</span> <span class="hljs-title">sc</span></span>
+</code></pre>
+<p>It will start two threads behaving as the participant <code>A</code> and <code>B</code>, then runs <code>C</code> in the main thread. </p>
+<ul>
+<li>Primitive <code>send s#role_X#msg value</code> outputs  on channel <code>s</code>  to role <code>X</code>, with a message label <code>msg</code> and  <em>payload</em> value <code>value</code>.  Expression <code>s#role_X#msg</code> is a standard <em>method invocation</em> syntax of OCaml, chained twice in a row. It returns a <em>continuation channel</em> which should be re-bound to the same variable <code>s</code> ensuring linearity, which is why sending is written as <code>let s = send s#roleX .. in</code>.</li>
+<li>Primitive <code>receive s#role_W</code> inputs the message from role <code>W</code>. The received message will have form <code>`msg(val, s)</code> packed inside a OCaml&#39;s <em>polymorphic variant</em> constructor <code>`msg</code>, with payload value <code>val</code> and continuation channel <code>s</code> (again, re-binding existing channel variable <code>s</code>).</li>
+<li>Primitive <code>close</code> terminates a communication channel.</li>
+</ul>
+<p>### 
+The above code is <em>session-typed</em>, as prescribed in the protocol <code>ring</code>  above. The all communications are deadlock-free, faithful to the protocol, and type-error free!</p>
+<p>Some basic notes:</p>
+<ul>
+<li>In a protocol <code>(x --&gt; y) msg @@ cont</code>, <code>--&gt;</code> is a 4-ary operator taking an output role  <code>x</code>, input role <code>y</code>, message label <code>msg</code> and continuation <code>cont</code>, where <code>@@</code> is a function application operator (equivalent to <code>$</code> in Haskell).</li>
+<li>Output expression  <code>send s#role_X#msg value</code>  is parsed as <code>((send (s#role_X#msg)) value)</code>.</li>
+</ul>
+<p>More examples including branching, loops and delegation will come soon!</p>
       <!-- <h4 class="clear">See the generated javascript code</h4> -->
       <!-- <pre id="last-js"> -->
       <!-- </pre> -->
