@@ -241,7 +241,7 @@
 <ol>
 <li>Write down a <strong>protocol</strong> using  <strong>Global Combinators</strong>. </li>
 </ol>
-<pre><code class="lang-ocaml"><span class="hljs-function"><span class="hljs-title">let</span> ring = (a --&gt;</span> <span class="hljs-function"><span class="hljs-title">b</span>) msg @@ (b --&gt;</span> <span class="hljs-function"><span class="hljs-title">c</span>) msg @@ (c --&gt;</span> a) finish
+<pre><code class="lang-ocaml"><span class="hljs-function"><span class="hljs-title">let</span> ring = (a --&gt;</span> <span class="hljs-function"><span class="hljs-title">b</span>) msg @@ (b --&gt;</span> <span class="hljs-function"><span class="hljs-title">c</span>) msg @@ (c --&gt;</span> a) msg finish
 </code></pre>
 <p>  --- This is a simple three-party ring-based protocol with <em>participants</em> <code>A</code>, <code>B</code> and <code>C</code>, circulating messages with <em>label</em> <code>msg</code> in this order. </p>
 <ul>
